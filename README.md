@@ -1,6 +1,6 @@
 # Raylib C++ Platformer Movement
 
-A simple platformer movement that z made using basic aabb collisions,
+A simple platformer movement that i made using basic aabb collisions,
 the movement has:
   1. Movemenet (right and left)
   2. Jump
