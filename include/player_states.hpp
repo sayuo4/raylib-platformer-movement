@@ -42,6 +42,15 @@ public:
 	PlayerFallingState();
 };
 
+class PlayerWallSlidingState : public PlayerState
+{
+private:
+	void update() override;
+
+public:
+	PlayerWallSlidingState();
+};
+
 class PlayerJumpingState : public PlayerState
 {
 private:

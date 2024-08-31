@@ -1,6 +1,4 @@
-#include <Functions.hpp>
 #include <iostream>
-#include <raylib.h>
 #include <string>
 #include <functional>
 #include <vector>
@@ -52,8 +50,13 @@ int main()
 		physicsSystem
 	);
 
-	StaticBody* firstWall = new StaticBody(
+	StaticBody* rightWall = new StaticBody(
 		CollisionRect(static_cast<float>(window.GetWidth() - 64), 0.0, 64.0, static_cast<float>(window.GetHeight())),
+		physicsSystem
+	);
+
+	StaticBody* leftWall = new StaticBody(
+		CollisionRect(rightWall->getPosition().x - (64.0 * 4.0), 0.0, 64.0, static_cast<float>(window.GetHeight() - (64 * 3))),
 		physicsSystem
 	);
 
@@ -62,23 +65,19 @@ int main()
 		player->update();
 		playerStateMachine.update();
 
-		// std::cout << player->collisionList.size() << '\n';
-		// CollisionInfo* testMove = player->testMove(raylib::Vector2(0.0));
-		// std::cout << testMove->intersection.x << " " << testMove->intersection.y << " " << testMove->intersection.width << " " << testMove->intersection.height << " " << '\n';
-
 		window.BeginDrawing();
 		window.ClearBackground(GRAY);
 
+
 #ifdef DEBUG
-		raylib::DrawText(playerStateMachine.getActiveState()->name, 32, 32, 24, BLACK);
-		raylib::DrawText(std::to_string(player->collisionList.size()), 32, 64, 24, BLACK);
+		raylib::DrawText("Player State: " + playerStateMachine.getActiveState()->name, 16, 16, 20, BLACK);
+		raylib::DrawText("Player Collision Count: " + std::to_string(player->collisionList.size()), 16, 40, 20, BLACK);
 #endif
 
 		player->collision.rect.Draw(WHITE);
 		ground->collision.rect.Draw(BLACK);
-		firstWall->collision.rect.Draw(BLACK);
-		// DrawRectangle(testMove->intersection.x, testMove->intersection.y, testMove->intersection.width, testMove->intersection.height, RED);
-		// if (testMove) delete testMove;
+		rightWall->collision.rect.Draw(BLACK);
+		leftWall->collision.rect.Draw(BLACK);
 
 		window.EndDrawing();
 	}

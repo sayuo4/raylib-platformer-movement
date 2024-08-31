@@ -18,17 +18,17 @@ public:
 	const float MAXIMUM_SPEED = 450.0;
 
 	// On Floor
-	const float RUNNING_ACC = 4000.0;
-	const float RUNNING_DEC = 4400.0;
+	const float RUNNING_ACC = 3800.0;
+	const float RUNNING_DEC = 4200.0;
 
 	// In Air
-	const float JUMPING_ACC = 3400.0;
-	const float JUMPING_DEC = 3200.0;
-	const float FALLING_ACC = 3200.0;
-	const float FALLING_DEC = 3000.0;
-	const float WALL_JUMPING_ACC = 3400.0;
-	const float WALL_JUMPING_DEC = 3200.0;
-	const float WALL_JUMPING_TOWARDS_WALL_DEC = 2800.0;
+	const float JUMPING_ACC = 3200.0;
+	const float JUMPING_DEC = 3000.0;
+	const float FALLING_ACC = 3000.0;
+	const float FALLING_DEC = 2800.0;
+	const float WALL_JUMPING_ACC = 3200.0;
+	const float WALL_JUMPING_DEC = 2000.0;
+	const float WALL_JUMPING_TOWARDS_WALL_DEC = 1800.0;
 
 	// Gravity
 	const float JUMP_NOT_PESSED_GRAVITY_FORCE = 1.6;

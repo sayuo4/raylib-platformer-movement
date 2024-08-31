@@ -14,9 +14,6 @@ public:
 
 class KinematicBody : public PhysicsBody
 {
-private:
-    float lastMovingDir;
-
 public:
     raylib::Vector2 velocity = raylib::Vector2::Zero();
 
@@ -29,6 +26,7 @@ public:
     KinematicBody(CollisionRect collision, PhysicsSystem* physicsSystem);
 
     void move();
+    CollisionInfo* testCollision(raylib::Vector2 position, PhysicsBody* body);
     CollisionInfo* testMove(raylib::Vector2 velocity);
 };
 

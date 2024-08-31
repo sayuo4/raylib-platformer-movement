@@ -1,4 +1,5 @@
 #include "player_states.hpp"
+#include <iostream>
 
 
 void PlayerIdleState::update()
@@ -61,6 +62,14 @@ void PlayerFallingState::update()
 PlayerFallingState::PlayerFallingState() : PlayerState("PlayerFallingState") {}
 
 
+void PlayerWallSlidingState::update()
+{
+
+}
+
+PlayerWallSlidingState::PlayerWallSlidingState() : PlayerState("PlayerWallSlidingState") {}
+
+
 void PlayerJumpingState::update()
 {
 	player->applyGravity();
@@ -79,9 +88,13 @@ PlayerJumpingState::PlayerJumpingState() : PlayerState("PlayerJumpingState") {}
 void PlayerWallJumpingState::update()
 {
 	player->applyGravity();
-	player->applyMovement(player->WALL_JUMPING_ACC, player->WALL_JUMPING_DEC);
+
+	const float DEC = (player->getHorizontalInput() == -player->wallNormal.x) ? player->WALL_JUMPING_TOWARDS_WALL_DEC : player->WALL_JUMPING_DEC;
+	player->applyMovement(player->WALL_JUMPING_ACC, DEC);
 
 	player->move();
+
+	if (player->isOnWall) player->enableWallJump();
 
 	if (player->velocity.y >= 0) switchToState("PlayerFallingState");
 }

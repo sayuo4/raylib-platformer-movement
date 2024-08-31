@@ -39,6 +39,7 @@ public:
     Object* collider;
     raylib::Rectangle intersection;
     raylib::Vector2 to;
+    raylib::Vector2 toSignum;
 };
 
 class PhysicsBody : public Object

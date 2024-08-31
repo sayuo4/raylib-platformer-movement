@@ -1,4 +1,5 @@
 #include "physics_system.hpp"
+#include "utility.hpp"
 #include <Vector2.hpp>
 
 
@@ -48,6 +49,7 @@ CollisionInfo* PhysicsBody::checkCollision(PhysicsBody* other) const
 	info->collider = other;
 	info->intersection = collision.rect.GetCollision(other->collision.rect);
 	info->to = other->getPosition() - getPosition();
+	info->toSignum = signum(info->to);
 
 	return info;
 }

@@ -2,9 +2,6 @@
 #include "physics_system.hpp"
 #include "utility.hpp"
 
-#include <iostream>
-#include <raylib.h>
-
 
 StaticBody::StaticBody(CollisionRect collision, PhysicsSystem* physicsSystem) :
 	PhysicsBody(collision, physicsSystem)
@@ -20,22 +17,41 @@ void KinematicBody::move()
 	collisionList.clear();
     isOnFloor = false;
     isOnCeiling = false;
-    bool currentOnWall = false;
+    isOnWall = false;
 
     setPosition(getPosition() + velocity * GetFrameTime());
-    if (velocity.x) lastMovingDir = signum(velocity.x);
 
-    if (collision.disabled) return;
+    if (collision.disabled)
+        return;
 
     for (auto& object : physicsSystem->bodies)
     {
-        if (object == this) continue;
+        if (object == this)
+            continue;
 
     	PhysicsBody* body = dynamic_cast<PhysicsBody*>(object);
-    	if (!body) continue;
 
+    	if (!body)
+            continue;
+
+        // Optimize later
         CollisionInfo* collisionInfo = checkCollision(body);
-        if (!collisionInfo) continue;
+        if (!collisionInfo)
+        {
+            CollisionInfo* wallCollisionInfo = testCollision(raylib::Vector2(1.0, 0.0), body);
+            
+            if (!wallCollisionInfo)
+                wallCollisionInfo = testCollision(raylib::Vector2(-1.0, 0.0), body);
+
+            if (wallCollisionInfo)
+            {
+                isOnWall = true;
+                collisionList.push_back(body);
+                delete wallCollisionInfo;
+            }
+
+            continue;
+        }
 
         collisionList.push_back(body);
 
@@ -46,7 +62,6 @@ void KinematicBody::move()
             setPosition(getPosition() - raylib::Vector2(collisionInfo->intersection.width * toSignum.x, 0.0));
             velocity.x = 0;
             isOnWall = true;
-            currentOnWall = true;
             wallNormal = raylib::Vector2{-toSignum.x, 0.0};
         }
 
@@ -55,44 +70,57 @@ void KinematicBody::move()
             setPosition(getPosition() - raylib::Vector2(0.0, collisionInfo->intersection.height * toSignum.y));
             velocity.y = 0;
 
-            if (toSignum.y == 1) isOnFloor = true;
-            else isOnCeiling = true;
+            if (toSignum.y == 1)
+                isOnFloor = true;
+            else
+                isOnCeiling = true;
         }
 
         delete collisionInfo;
     }
+}
 
-    if (isOnWall and !currentOnWall)
-    {
-        CollisionInfo* wallTestCollisionInfo = testMove(raylib::Vector2(lastMovingDir));
-        if (!wallTestCollisionInfo) isOnWall = false;
-        
-        else
-        {
-            collisionList.push_back(wallTestCollisionInfo->collider);
-            delete wallTestCollisionInfo;
-        }
-    }    
+CollisionInfo* KinematicBody::testCollision(raylib::Vector2 velocity, PhysicsBody* otherBody)
+{
+    if (this == otherBody)
+        return nullptr;
+
+    PhysicsBody* virtualBody = new PhysicsBody(
+        CollisionRect(
+            getPosition() + velocity * GetFrameTime(),
+            collision.rect.GetSize()
+        )
+    );
+
+    CollisionInfo* collisionInfo = virtualBody->checkCollision(otherBody);
+
+    delete virtualBody;
+    return collisionInfo;
 }
 
 CollisionInfo* KinematicBody::testMove(raylib::Vector2 velocity)
 {
     PhysicsBody* virtualBody = new PhysicsBody(
         CollisionRect(
-            getPosition() + velocity,
+            getPosition() + velocity * GetFrameTime(),
             collision.rect.GetSize()
         )
     );
 
     for (auto& object : physicsSystem->bodies)
     {
-        if (object == this) continue;
+        if (this == object)
+            continue;
 
         PhysicsBody* body = dynamic_cast<PhysicsBody*>(object);
-        if (!body) continue;
+
+        if (!body)
+            continue;
 
         CollisionInfo* collisionInfo = virtualBody->checkCollision(body);
-        if (!collisionInfo) continue;
+
+        if (!collisionInfo)
+            continue;
 
         delete virtualBody;
         return collisionInfo;
