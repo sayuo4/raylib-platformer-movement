@@ -1,8 +1,13 @@
 #include "player.hpp"
+#include "input_manager.hpp"
 
 
-Player::Player(CollisionRect collision, PhysicsSystem* physicsSystem) :
-	KinematicBody(collision, physicsSystem)
+Player::Player(float x, float y, float width, float height) :
+	MovingObject(x, y, width, height)
+{}
+
+Player::Player(const raylib::Vector2& position, const raylib::Vector2& size) :
+	MovingObject(position, size)
 {}
 
 float Player::getHorizontalInput() const
@@ -10,14 +15,9 @@ float Player::getHorizontalInput() const
 	return ::getInputAxis(KEY_LEFT, KEY_RIGHT);
 }
 
-void Player::update()
+void Player::applyGravity(float deltaTime)
 {
-
-}
-
-void Player::applyGravity()
-{
-	velocity.y += getGravityForce() * GetFrameTime();
+	velocity.y += getGravityForce() * deltaTime;
 	 
 	// velocity.y = clampf(velocity.y, -INF, getGravityLimit())
 }
@@ -26,14 +26,14 @@ float Player::getGravityForce() const
 {
 	return (
 		!IsKeyDown(KEY_Z) ? getDefaultGravityForce() * JUMP_NOT_PESSED_GRAVITY_FORCE
-		: IsKeyDown(KEY_DOWN) and velocity.y >= 0.0 ? getDefaultGravityForce() * DOWN_PRESSED_GRAVITY_FORCE
+		: IsKeyDown(KEY_DOWN) and velocity.y >= 0.0f ? getDefaultGravityForce() * DOWN_PRESSED_GRAVITY_FORCE
 		: getDefaultGravityForce()
 	);
 }
 
 float Player::getDefaultGravityForce() const
 {
-	return velocity.y >= 0.0 ? FALLING_GRAVITY : JUMPING_GRAVITY;
+	return velocity.y >= 0.0f ? FALLING_GRAVITY : JUMPING_GRAVITY;
 }
 
 void Player::applyMovement(float acc, float dec)
@@ -64,7 +64,7 @@ void Player::jump(float force, bool changeToJumpState)
 
 void Player::enableJump()
 {
-	if (raylib::Keyboard::IsKeyPressed(KEY_Z))
+	if (InputManager::isKeyPressed(KEY_Z))
 	{
 		jump(JUMP_FORCE);
 	}
@@ -72,7 +72,7 @@ void Player::enableJump()
 
 void Player::wallJump()
 {
-	float wallJumpDir = wallNormal.x;
+	float wallJumpDir = -wallDir;
 
 	velocity.x = WALL_JUMP_HORIZONTAL_FORCE * wallJumpDir;
 	jump(WALL_JUMP_VERTICAL_FORCE, false);
@@ -82,7 +82,7 @@ void Player::wallJump()
 
 void Player::enableWallJump()
 {
-	if (raylib::Keyboard::IsKeyPressed(KEY_Z))
+	if (InputManager::isKeyPressed(KEY_Z))
 	{
 		wallJump();
 	}

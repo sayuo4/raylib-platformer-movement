@@ -6,8 +6,11 @@
 
 #include "raylib-cpp.hpp"
 #include "utility.hpp"
-#include "physics_system.hpp"
-#include "physics_bodies.hpp"
+#include "input_manager.hpp"
+#include "object.hpp"
+#include "physics_object.hpp"
+#include "moving_object.hpp"
+#include "solid_object.hpp"
 #include "player.hpp"
 #include "player_state_machine.hpp"
 #include "player_states.hpp"
@@ -20,10 +23,8 @@ int main()
 	raylib::Window window {800, 600, "Player Movement"};
 	window.SetTargetFPS(60);
 
-	PhysicsSystem* physicsSystem = new PhysicsSystem;
+	Player* player = new Player(64.0f * 3.0f, 200.0f, 56.0f, 96.0f);
 
-	Player* player = new Player(CollisionRect(raylib::Vector2(64.0 * 3.0, 200.0), raylib::Vector2(56.0, 96.0)), physicsSystem);
-	
 	PlayerStateMachine playerStateMachine = PlayerStateMachine(player);
 
 	PlayerIdleState* playerIdleState = new PlayerIdleState;
@@ -36,48 +37,53 @@ int main()
 
 	playerStateMachine.addState(playerIdleState)
 		.addState(playerRunningState)
-		.addState(playerLandingState)
 		.addState(playerJumpingState)
 		.addState(playerFallingState)
 		.addState(playerAirborneState)
+		.addState(playerLandingState)
 		.addState(playerWallJumpingState);
 
 	playerStateMachine.setActiveState(playerFallingState);
 
 
-	StaticBody* ground = new StaticBody(
-		CollisionRect(0.0, static_cast<float>(window.GetHeight() - 64), static_cast<float>(window.GetWidth()), 64.0),
-		physicsSystem
+	SolidObject* ground = new SolidObject(
+		0.0f,
+		window.GetSize().y - 64.0f,
+		window.GetSize().x,
+		64.0f
 	);
 
-	StaticBody* rightWall = new StaticBody(
-		CollisionRect(static_cast<float>(window.GetWidth() - 64), 0.0, 64.0, static_cast<float>(window.GetHeight())),
-		physicsSystem
+	SolidObject* rightWall = new SolidObject(
+		window.GetSize().x - 64.0f,
+		0.0f,
+		64.0f,
+		window.GetSize().y
 	);
 
-	StaticBody* leftWall = new StaticBody(
-		CollisionRect(rightWall->getPosition().x - (64.0 * 4.0), 0.0, 64.0, static_cast<float>(window.GetHeight() - (64 * 3))),
-		physicsSystem
+	SolidObject* leftWall = new SolidObject(
+		rightWall->rect.GetPosition().x - (64.0f * 4.0f),
+		0.0f,
+		64.0f,
+		window.GetSize().y - (64.0f * 3.0f)
 	);
 
 	while (!window.ShouldClose())
 	{
-		player->update();
-		playerStateMachine.update();
+		Object::updateObjects();
 
 		window.BeginDrawing();
 		window.ClearBackground(GRAY);
 
-
 #ifdef DEBUG
 		raylib::DrawText("Player State: " + playerStateMachine.getActiveState()->name, 16, 16, 20, BLACK);
 		raylib::DrawText("Player Collision Count: " + std::to_string(player->collisionList.size()), 16, 40, 20, BLACK);
+		raylib::DrawText("FPS: " + std::to_string(GetFPS()), 16, 64, 20, BLACK);
 #endif
 
-		player->collision.rect.Draw(WHITE);
-		ground->collision.rect.Draw(BLACK);
-		rightWall->collision.rect.Draw(BLACK);
-		leftWall->collision.rect.Draw(BLACK);
+		player->rect.Draw(WHITE);
+		ground->rect.Draw(BLACK);
+		rightWall->rect.Draw(BLACK);
+		leftWall->rect.Draw(BLACK);
 
 		window.EndDrawing();
 	}

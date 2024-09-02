@@ -8,7 +8,10 @@ PlayerState::PlayerState(std::string name) : name(name) {}
 
 void PlayerState::enter(std::string previousState) {}
 void PlayerState::exit(std::string newState) {}
-void PlayerState::update() {}
+
+void PlayerState::update(float deltaTime) {}
+
+void PlayerState::fixedUpdate(float deltaTime) {}
 
 void PlayerState::switchToState(std::string stateName)
 {
@@ -66,11 +69,14 @@ PlayerStateMachine& PlayerStateMachine::addState(PlayerState* state)
 	return *this;
 }
 
-void PlayerStateMachine::update()
+void PlayerStateMachine::update(float deltaTime)
 {
 	if (activeState)
-	{
-		activeState->update();
-	}
+		activeState->update(deltaTime);
 }
 
+void PlayerStateMachine::fixedUpdate(float deltaTime)
+{
+	if (activeState)
+		activeState->fixedUpdate(deltaTime);
+}

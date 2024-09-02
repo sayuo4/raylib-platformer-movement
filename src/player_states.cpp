@@ -2,13 +2,13 @@
 #include <iostream>
 
 
-void PlayerIdleState::update()
+void PlayerIdleState::fixedUpdate(float deltaTime)
 {
-	player->applyGravity();
+	player->applyGravity(deltaTime);
 	player->applyMovement(player->RUNNING_ACC, player->RUNNING_DEC);
-	player->enableJump();
 
 	player->move();
+	player->enableJump();
 
 	if (!player->isOnFloor) switchToState("PlayerAirborneState");
 	else if (player->velocity.x) switchToState("PlayerRunningState");
@@ -17,16 +17,19 @@ void PlayerIdleState::update()
 PlayerIdleState::PlayerIdleState() : PlayerState("PlayerIdleState") {}
 
 
-void PlayerRunningState::update()
+void PlayerRunningState::fixedUpdate(float deltaTime)
 {
-	player->applyGravity();
+	player->applyGravity(deltaTime);
 	player->applyMovement(player->RUNNING_ACC, player->RUNNING_DEC);
-	player->enableJump();
 
 	player->move();
+	player->enableJump();
 
-	if (!player->isOnFloor) switchToState("PlayerAirborneState");
-	else if (!player->velocity.x and !player->getHorizontalInput()) switchToState("PlayerIdleState");
+	if (!player->isOnFloor)
+		switchToState("PlayerAirborneState");
+	
+	else if (!player->velocity.x and !player->getHorizontalInput())
+		switchToState("PlayerIdleState");
 }
 
 PlayerRunningState::PlayerRunningState() : PlayerState("PlayerRunningState") {}
@@ -46,23 +49,27 @@ void PlayerLandingState::enter(std::string)
 PlayerLandingState::PlayerLandingState() : PlayerState("PlayerLandingState") {}
 
 
-void PlayerFallingState::update()
+void PlayerFallingState::fixedUpdate(float deltaTime)
 {
-	player->applyGravity();
+	player->applyGravity(deltaTime);
 	player->applyMovement(player->FALLING_ACC, player->FALLING_DEC);
 
 	player->move();
 
-	if (player->isOnWall) player->enableWallJump();
+	if (player->isOnWall)
+		player->enableWallJump();
 
-	if (player->isOnFloor) switchToState("PlayerLandingState");
-	else if (player->velocity.y < 0) switchToState("PlayerJumpingState");
+	if (player->isOnFloor)
+		switchToState("PlayerLandingState");
+	
+	else if (player->velocity.y < 0)
+		switchToState("PlayerJumpingState");
 }
 
 PlayerFallingState::PlayerFallingState() : PlayerState("PlayerFallingState") {}
 
 
-void PlayerWallSlidingState::update()
+void PlayerWallSlidingState::fixedUpdate(float deltaTime)
 {
 
 }
@@ -70,9 +77,9 @@ void PlayerWallSlidingState::update()
 PlayerWallSlidingState::PlayerWallSlidingState() : PlayerState("PlayerWallSlidingState") {}
 
 
-void PlayerJumpingState::update()
+void PlayerJumpingState::fixedUpdate(float deltaTime)
 {
-	player->applyGravity();
+	player->applyGravity(deltaTime);
 	player->applyMovement(player->JUMPING_ACC, player->JUMPING_DEC);
 
 	player->move();
@@ -85,11 +92,11 @@ void PlayerJumpingState::update()
 PlayerJumpingState::PlayerJumpingState() : PlayerState("PlayerJumpingState") {}
 
 
-void PlayerWallJumpingState::update()
+void PlayerWallJumpingState::fixedUpdate(float deltaTime)
 {
-	player->applyGravity();
+	player->applyGravity(deltaTime);
 
-	const float DEC = (player->getHorizontalInput() == -player->wallNormal.x) ? player->WALL_JUMPING_TOWARDS_WALL_DEC : player->WALL_JUMPING_DEC;
+	const float DEC = (player->getHorizontalInput() == player->wallDir) ? player->WALL_JUMPING_TOWARDS_WALL_DEC : player->WALL_JUMPING_DEC;
 	player->applyMovement(player->WALL_JUMPING_ACC, DEC);
 
 	player->move();

@@ -17,7 +17,8 @@ protected:
 
 	virtual void enter(std::string previousState);
 	virtual void exit(std::string newState);
-	virtual void update();
+	virtual void update(float deltaTime);
+	virtual void fixedUpdate(float deltaTime);
 
 	void switchToState(std::string stateName);
 
@@ -27,7 +28,7 @@ public:
 	friend class PlayerStateMachine;
 };
 
-class PlayerStateMachine
+class PlayerStateMachine : Object
 {
 private:
 	Player* player;
@@ -47,7 +48,8 @@ public:
 
 	PlayerStateMachine& addState(PlayerState* state);
 	
-	void update();
+	void update(float deltaTime) override;
+	void fixedUpdate(float deltaTime) override;
 };
 
 #endif

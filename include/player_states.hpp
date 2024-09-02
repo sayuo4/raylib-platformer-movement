@@ -9,7 +9,7 @@
 class PlayerIdleState : public PlayerState
 {
 private:
-	void update() override;
+	void fixedUpdate(float deltaTime) override;
 
 public:
 	PlayerIdleState();
@@ -18,7 +18,7 @@ public:
 class PlayerRunningState : public PlayerState
 {
 private:
-	void update() override;
+	void fixedUpdate(float deltaTime) override;
 
 public:
 	PlayerRunningState();
@@ -36,7 +36,7 @@ public:
 class PlayerFallingState : public PlayerState
 {
 private:
-	void update() override;
+	void fixedUpdate(float deltaTime) override;
 
 public:
 	PlayerFallingState();
@@ -45,7 +45,7 @@ public:
 class PlayerWallSlidingState : public PlayerState
 {
 private:
-	void update() override;
+	void fixedUpdate(float deltaTime) override;
 
 public:
 	PlayerWallSlidingState();
@@ -54,7 +54,7 @@ public:
 class PlayerJumpingState : public PlayerState
 {
 private:
-	void update() override;
+	void fixedUpdate(float deltaTime) override;
 
 public:
 	PlayerJumpingState();
@@ -63,7 +63,7 @@ public:
 class PlayerWallJumpingState: public PlayerState
 {
 private:
-	void update() override;
+	void fixedUpdate(float deltaTime) override;
 
 public:
 	PlayerWallJumpingState();

@@ -7,8 +7,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(SOURCES
     src/main.cpp
     src/utility.cpp
-    src/physics_system.cpp
-    src/physics_bodies.cpp
+    src/input_manager.cpp
+    src/object.cpp
+    src/physics_object.cpp
+    src/moving_object.cpp
+    src/solid_object.cpp
     src/player.cpp 
     src/player_state_machine.cpp
     src/player_states.cpp
@@ -20,6 +23,8 @@ set(BUILD_DIR "build/linux/")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${BUILD_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${BUILD_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${BUILD_DIR})
+
+# set(CMAKE_BUILD_TYPE Debug)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 target_include_directories(${PROJECT_NAME} PRIVATE ${CUSTOM_HEADER_PATH})
