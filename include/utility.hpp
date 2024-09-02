@@ -6,22 +6,25 @@
 
 #include "raylib-cpp.hpp"
 
+constexpr float FIXED_UPDATE_INTERVAL = 1.0f / 60.0f;
 
 float signum(float value);
-
 raylib::Vector2 signum(raylib::Vector2 value);
 
 float moveToward(float current, float target, float speed);
 
 float getInputAxis(int negativeKey, int positiveKey);
 
-
 template<typename Type, typename... Params>
-size_t getAddress(std::function<Type(Params...)> fn)
+size_t getAddress(const std::function<Type(Params...)>& fn)
 {
     typedef Type(fnType)(Params...);
-    fnType ** fnPointer = fn.template target<fnType*>();
-    return (size_t) *fnPointer;
+    fnType* fnPointer = fn.template target<fnType>();
+    if (fnPointer) {
+        return reinterpret_cast<size_t>(fnPointer);
+    } else {
+        return 0;
+    }
 }
 
 template <typename... Args>
@@ -54,15 +57,17 @@ public:
 	}
 };
 
-class Object
-{
-protected:
-    Object() = default;
-    Signal<> deleted;
+class PhysicsObject;
 
+struct CollisionInfo
+{
 public:
-    virtual ~Object() = default;
-    friend class PhysicsSystem;
+	PhysicsObject* collider;
+	raylib::Rectangle intersection;
+	raylib::Vector2 to;
+	raylib::Vector2 toSignum;
+
+	CollisionInfo(PhysicsObject* collider, raylib::Rectangle intersection, raylib::Vector2 to);
 };
 
 #endif
