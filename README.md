@@ -6,3 +6,5 @@ A simple platformer movement that i made using basic aabb collisions, the repo i
   3. Jump
   4. Wall slide
   5. Wall jump
+
+***Note***: This collision detection is discrete. therefore, if the speed is very high or the physics update rate is too low, collision detection may not work accurately
