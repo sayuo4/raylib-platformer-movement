@@ -1,11 +1,12 @@
 #include "utility.hpp"
+#include "input_manager.hpp"
 
 float signum(float value)
 {
     return (value > 0.0f) ? 1.0f : ((value < 0.0f) ? -1.0f : 0.0f);
 }
 
-raylib::Vector2 signum(raylib::Vector2 value)
+raylib::Vector2 signum(const raylib::Vector2& value)
 {
 	return raylib::Vector2{signum(value.x), signum(value.y)};
 }
@@ -19,8 +20,8 @@ float moveToward(float current, float target, float speed)
 
 float getInputAxis(int negativeKey, int positiveKey)
 {
-	bool negativePressed = raylib::Keyboard::IsKeyDown(negativeKey);
-	bool positivePressed = raylib::Keyboard::IsKeyDown(positiveKey);
+	bool negativePressed = InputManager::isKeyDown(negativeKey);
+	bool positivePressed = InputManager::isKeyDown(positiveKey);
 
 	if (positivePressed && !negativePressed) return 1.0f;
 	else if (negativePressed && !positivePressed) return -1.0f;

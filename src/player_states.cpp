@@ -1,5 +1,4 @@
 #include "player_states.hpp"
-#include <iostream>
 
 
 void PlayerIdleState::fixedUpdate(float deltaTime)
@@ -8,6 +7,7 @@ void PlayerIdleState::fixedUpdate(float deltaTime)
 	player->applyMovement(player->RUNNING_ACC, player->RUNNING_DEC);
 
 	player->move();
+	
 	player->enableJump();
 
 	if (!player->isOnFloor) switchToState("PlayerAirborneState");
@@ -23,6 +23,7 @@ void PlayerRunningState::fixedUpdate(float deltaTime)
 	player->applyMovement(player->RUNNING_ACC, player->RUNNING_DEC);
 
 	player->move();
+	
 	player->enableJump();
 
 	if (!player->isOnFloor)
@@ -56,8 +57,8 @@ void PlayerFallingState::fixedUpdate(float deltaTime)
 
 	player->move();
 
-	if (player->isOnWall)
-		player->enableWallJump();
+	player->enableWallSlide();
+	player->enableWallJump();
 
 	if (player->isOnFloor)
 		switchToState("PlayerLandingState");
@@ -71,7 +72,19 @@ PlayerFallingState::PlayerFallingState() : PlayerState("PlayerFallingState") {}
 
 void PlayerWallSlidingState::fixedUpdate(float deltaTime)
 {
+	player->velocity.y = moveToward(player->velocity.y, player->getWallSlidingSpeed(), player->WALL_SLIDING_ACC);
 
+	player->move();
+
+	player->enableWallJump();
+
+	float inputDir = signum(player->getHorizontalInput());
+
+	if (inputDir != player->wallDir || !player->isOnWall)
+		switchToState("PlayerAirborneState");
+
+	else if (player->isOnFloor)
+		switchToState("PlayerLandingState");
 }
 
 PlayerWallSlidingState::PlayerWallSlidingState() : PlayerState("PlayerWallSlidingState") {}
@@ -84,9 +97,10 @@ void PlayerJumpingState::fixedUpdate(float deltaTime)
 
 	player->move();
 
-	if (player->isOnWall) player->enableWallJump();
+	player->enableWallJump();
 
-	if (player->velocity.y >= 0) switchToState("PlayerFallingState");
+	if (player->velocity.y >= 0)
+		switchToState("PlayerFallingState");
 }
 
 PlayerJumpingState::PlayerJumpingState() : PlayerState("PlayerJumpingState") {}
@@ -101,9 +115,10 @@ void PlayerWallJumpingState::fixedUpdate(float deltaTime)
 
 	player->move();
 
-	if (player->isOnWall) player->enableWallJump();
+	player->enableWallJump();
 
-	if (player->velocity.y >= 0) switchToState("PlayerFallingState");
+	if (player->velocity.y >= 0)
+		switchToState("PlayerFallingState");
 }
 
 PlayerWallJumpingState::PlayerWallJumpingState() : PlayerState("PlayerWallJumpingState") {}

@@ -8,6 +8,7 @@
 #include "utility.hpp"
 #include "input_manager.hpp"
 #include "object.hpp"
+#include "timer.hpp"
 #include "physics_object.hpp"
 #include "moving_object.hpp"
 #include "solid_object.hpp"
@@ -21,9 +22,9 @@
 int main()
 {
 	raylib::Window window {800, 600, "Player Movement"};
-	window.SetTargetFPS(60);
+	// window.SetTargetFPS(60);
 
-	Player* player = new Player(64.0f * 3.0f, 200.0f, 56.0f, 96.0f);
+	Player* player = new Player(192.0f * 3.0f, 200.0f, 56.0f, 96.0f);
 
 	PlayerStateMachine playerStateMachine = PlayerStateMachine(player);
 
@@ -31,17 +32,19 @@ int main()
 	PlayerRunningState* playerRunningState = new PlayerRunningState;
 	PlayerLandingState* playerLandingState = new PlayerLandingState;
 	PlayerFallingState* playerFallingState = new PlayerFallingState;
+	PlayerWallSlidingState* playerWallSlidingState = new PlayerWallSlidingState;
 	PlayerJumpingState* playerJumpingState = new PlayerJumpingState;
-	PlayerWallJumpingState* playerWallJumpingState = new PlayerWallJumpingState; 
+	PlayerWallJumpingState* playerWallJumpingState = new PlayerWallJumpingState;
 	PlayerAirborneState* playerAirborneState = new PlayerAirborneState;
 
 	playerStateMachine.addState(playerIdleState)
 		.addState(playerRunningState)
-		.addState(playerJumpingState)
-		.addState(playerFallingState)
-		.addState(playerAirborneState)
 		.addState(playerLandingState)
-		.addState(playerWallJumpingState);
+		.addState(playerFallingState)
+		.addState(playerWallSlidingState)
+		.addState(playerJumpingState)
+		.addState(playerWallJumpingState)
+		.addState(playerAirborneState);
 
 	playerStateMachine.setActiveState(playerFallingState);
 
@@ -72,7 +75,7 @@ int main()
 		Object::updateObjects();
 
 		window.BeginDrawing();
-		window.ClearBackground(GRAY);
+		window.ClearBackground(DARKGRAY);
 
 #ifdef DEBUG
 		raylib::DrawText("Player State: " + playerStateMachine.getActiveState()->name, 16, 16, 20, BLACK);

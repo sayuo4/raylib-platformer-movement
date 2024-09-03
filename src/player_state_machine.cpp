@@ -21,7 +21,8 @@ void PlayerState::switchToState(std::string stateName)
 
 void PlayerStateMachine::stateTransition(PlayerState* currentState, std::string state_name)
 {
-	if (currentState == activeState) forceStateTransition(state_name);
+	if (currentState == activeState)
+		forceStateTransition(state_name);
 }
 
 void PlayerStateMachine::forceStateTransition(std::string state_name)
@@ -35,7 +36,7 @@ void PlayerStateMachine::forceStateTransition(std::string state_name)
 		}
 	}
 
-	std::cerr << "Can't find state: '" << state_name << "' in player state machine";
+	std::cerr << "Can't find state: '" << state_name << "' in player state machine\n";
 }
 
 PlayerStateMachine::PlayerStateMachine(Player* player) : player(player)
@@ -47,12 +48,16 @@ void PlayerStateMachine::setActiveState(PlayerState* newState)
 {
 	PlayerState* previousState = activeState;
 	
-	if (newState == activeState) return;
+	if (newState == activeState)
+		return;
 
 	activeState = newState;
 
-	if (previousState) previousState->exit(newState ? newState->name : "");
-	if (newState) newState->enter(previousState ? previousState->name : "");
+	if (previousState)
+		previousState->exit(newState ? newState->name : "");
+
+	if (newState)
+		newState->enter(previousState ? previousState->name : "");
 }
 
 PlayerState* PlayerStateMachine::getActiveState()

@@ -1,8 +1,7 @@
 #include "input_manager.hpp"
+#include "object.hpp"
 #include "raylib-cpp.hpp"
 #include <unordered_set>
-#include <algorithm>
-#include <iostream>
 
 std::unordered_set<int> InputManager::pressedKeys;
 std::unordered_set<int> InputManager::justPressedKeys;
@@ -10,18 +9,25 @@ std::unordered_set<int> InputManager::justReleasedKeys;
 
 void InputManager::update()
 {
+    std::unordered_set<int> keysToRemove;
+
     for (int key : pressedKeys)
     {
-        if (!raylib::Keyboard::IsKeyDown(key))
+        if (!InputManager::isKeyDown(key))
         {
-        	pressedKeys.erase(key);
+            keysToRemove.insert(key);
             justReleasedKeys.insert(key);
         }
     }
 
+    for (int key : keysToRemove)
+    {
+        pressedKeys.erase(key);
+    }
+
     int pressedKey = GetKeyPressed();
 
-    if (pressedKey != 0)
+    if (pressedKey)
     {
         pressedKeys.insert(pressedKey);
         justPressedKeys.insert(pressedKey);
@@ -36,15 +42,21 @@ void InputManager::fixedUpdate()
 
 bool InputManager::isKeyDown(int key)
 {
-    return pressedKeys.find(key) != pressedKeys.end();
+    return IsKeyDown(key);
 }
 
 bool InputManager::isKeyPressed(int key)
 {
-    return justPressedKeys.find(key) != justPressedKeys.end();
+    if (Object::isAtPhysicsFrame())
+        return justPressedKeys.find(key) != justPressedKeys.end();
+
+    return IsKeyPressed(key);
 }
 
 bool InputManager::isKeyReleased(int key)
 {
-    return justReleasedKeys.find(key) != justReleasedKeys.end();
+    if (Object::isAtPhysicsFrame())
+        return justReleasedKeys.find(key) != justReleasedKeys.end();
+
+    return IsKeyReleased(key);
 }

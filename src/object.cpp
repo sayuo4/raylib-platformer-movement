@@ -34,19 +34,25 @@ void Object::updateObjects()
 {
 	float deltaTime = GetFrameTime();
 
-
 	InputManager::update();
+
 	for (auto& object : objects)
 		object->update(deltaTime);
 
 	accumulatedDeltaTime += deltaTime;
 
-	while (accumulatedDeltaTime >= FIXED_UPDATE_INTERVAL)
+	while (isAtPhysicsFrame())
 	{
 		for (auto& object : objects)
 			object->fixedUpdate(FIXED_UPDATE_INTERVAL);
+
 		InputManager::fixedUpdate();
 
 		accumulatedDeltaTime -= FIXED_UPDATE_INTERVAL;
 	}
+}
+
+bool Object::isAtPhysicsFrame()
+{
+	return accumulatedDeltaTime >= FIXED_UPDATE_INTERVAL;
 }

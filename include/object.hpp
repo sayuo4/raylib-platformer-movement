@@ -19,6 +19,7 @@ public:
 	~Object();
 
 	static void updateObjects();
+	static bool isAtPhysicsFrame();
 };
 
 #endif

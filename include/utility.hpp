@@ -9,7 +9,7 @@
 constexpr float FIXED_UPDATE_INTERVAL = 1.0f / 60.0f;
 
 float signum(float value);
-raylib::Vector2 signum(raylib::Vector2 value);
+raylib::Vector2 signum(const raylib::Vector2& value);
 
 float moveToward(float current, float target, float speed);
 

@@ -25,8 +25,8 @@ void Player::applyGravity(float deltaTime)
 float Player::getGravityForce() const
 {
 	return (
-		!IsKeyDown(KEY_Z) ? getDefaultGravityForce() * JUMP_NOT_PESSED_GRAVITY_FORCE
-		: IsKeyDown(KEY_DOWN) and velocity.y >= 0.0f ? getDefaultGravityForce() * DOWN_PRESSED_GRAVITY_FORCE
+		!InputManager::isKeyDown(KEY_Z) ? getDefaultGravityForce() * JUMP_NOT_PESSED_GRAVITY_FORCE
+		: InputManager::isKeyDown(KEY_DOWN) and velocity.y >= 0.0f ? getDefaultGravityForce() * DOWN_PRESSED_GRAVITY_FORCE
 		: getDefaultGravityForce()
 	);
 }
@@ -59,7 +59,8 @@ void Player::jump(float force, bool changeToJumpState)
 {
 	velocity.y = -force;
 
-	if (changeToJumpState) forceStateTransition.emit("PlayerJumpingState");
+	if (changeToJumpState)
+		forceStateTransition.emit("PlayerJumpingState");
 }
 
 void Player::enableJump()
@@ -82,8 +83,29 @@ void Player::wallJump()
 
 void Player::enableWallJump()
 {
-	if (InputManager::isKeyPressed(KEY_Z))
+	if (InputManager::isKeyPressed(KEY_Z) && isOnWall)
 	{
 		wallJump();
 	}
+}
+
+bool Player::canWallSlide()
+{
+	float inputDir = signum(getHorizontalInput());
+
+	bool isMovingToTheWall = (inputDir == wallDir) && isOnWall;
+
+	return isMovingToTheWall && inputDir != 0.0f;
+}
+
+float Player::getWallSlidingSpeed()
+{
+	return InputManager::isKeyDown(KEY_DOWN) ?
+			(WALL_SLIDING_SPEED * DOWN_PRESSED_WALL_SLIDING_SPEED) : WALL_SLIDING_SPEED;
+}
+
+void Player::enableWallSlide()
+{
+	if (canWallSlide())
+		forceStateTransition.emit("PlayerWallSlidingState");
 }

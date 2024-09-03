@@ -56,7 +56,6 @@ void MovingObject::move()
             velocity.x = 0;
             isOnWall = true;
             wallDir = collisionInfo->toSignum.x;
-            std::cout << wallDir << '\n';
         }
 
         else
@@ -77,7 +76,7 @@ void MovingObject::move()
 CollisionInfo* MovingObject::testCollision(const raylib::Vector2& velocity, PhysicsObject* body)
 {
     PhysicsObject* virtualBody = new PhysicsObject(
-        rect.GetPosition() + velocity,
+        rect.GetPosition() + velocity * FIXED_UPDATE_INTERVAL,
         rect.GetSize(),
         true
     );
@@ -91,7 +90,7 @@ CollisionInfo* MovingObject::testCollision(const raylib::Vector2& velocity, Phys
 CollisionInfo* MovingObject::testMove(const raylib::Vector2& velocity)
 {
     PhysicsObject* virtualBody = new PhysicsObject(
-        rect.GetPosition() + velocity,
+        rect.GetPosition() + velocity * FIXED_UPDATE_INTERVAL,
         rect.GetSize(),
         true
     );
