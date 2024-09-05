@@ -7,4 +7,10 @@ A simple platformer movement that i made using basic aabb collisions, the repo i
   4. Wall slide
   5. Wall jump
 
-***Note***: The collision detection is discrete. therefore, if the speed is very high or the physics update rate is too low, collision detection may not work accurately
+***Notes***: The collision detection is discrete. therefore, if the speed is very high or the physics update rate is too low, collision detection may not work accurately
+
+## Building
+Building requirments:
+  1. c++17 or higher
+  2. raylib
+  3. raylib-cpp
