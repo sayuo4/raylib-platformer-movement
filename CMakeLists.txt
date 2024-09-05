@@ -31,12 +31,3 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${BUILD_DIR})
 add_executable(${PROJECT_NAME} ${SOURCES})
 target_include_directories(${PROJECT_NAME} PRIVATE ${CUSTOM_HEADER_PATH})
 target_link_libraries(${PROJECT_NAME} ${LIBRARIES})
-
-add_custom_target(build
-    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target ${PROJECT_NAME}
-    COMMENT "Building ${PROJECT_NAME}")
-
-add_custom_target(run
-    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target ${PROJECT_NAME}
-    COMMAND ${CMAKE_BINARY_DIR}/${BUILD_DIR}/${PROJECT_NAME}
-    COMMENT "Building and Running ${PROJECT_NAME}")
