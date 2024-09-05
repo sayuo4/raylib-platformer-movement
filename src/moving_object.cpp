@@ -1,9 +1,6 @@
 #include "moving_object.hpp"
 #include "utility.hpp"
 
-#include <iostream>
-
-
 MovingObject::MovingObject(const float x, const float y, const float width, const float height) :
 	PhysicsObject(x, y, width, height)
 {}

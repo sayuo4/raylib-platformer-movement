@@ -1,7 +1,6 @@
 #include "raycast.hpp"
 #include "physics_object.hpp"
 
-
 Raycast::Raycast(raylib::Vector2 position, raylib::Vector2 direction, PhysicsObject* ignoredObject) :
 	position(position),
 	direction(direction),

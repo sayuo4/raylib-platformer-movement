@@ -1,11 +1,10 @@
 #ifndef PLAYER_STATE_MACHINE_HPP
 #define PLAYER_STATE_MACHINE_HPP
 
+#include "player.hpp"
+#include "utility.hpp"
 #include <string>
 #include <vector>
-
-#include "utility.hpp"
-#include "player.hpp"
 
 class PlayerState
 {

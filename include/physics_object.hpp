@@ -1,11 +1,10 @@
 #ifndef PHYSICS_OBJECT_HPP
 #define PHYSICS_OBJECT_HPP
 
-#include <vector>
-
-#include "raylib-cpp.hpp"
-#include "utility.hpp"
 #include "object.hpp"
+#include "utility.hpp"
+#include "raylib-cpp.hpp"
+#include <vector>
 
 class PhysicsObject : public Object
 {

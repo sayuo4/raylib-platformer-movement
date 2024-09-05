@@ -1,10 +1,8 @@
 #ifndef PLAYER_STATES_HPP
 #define PLAYER_STATES_HPP
 
-#include <string>
-
 #include "player_state_machine.hpp"
-
+#include <string>
 
 class PlayerIdleState : public PlayerState
 {

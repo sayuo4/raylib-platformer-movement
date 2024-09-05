@@ -1,10 +1,9 @@
 #ifndef UTILITY_HPP
 #define UTILITY_HPP
 
+#include "raylib-cpp.hpp"
 #include <functional>
 #include <algorithm>
-
-#include "raylib-cpp.hpp"
 
 constexpr float FIXED_UPDATE_INTERVAL = 1.0f / 60.0f;
 

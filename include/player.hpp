@@ -1,12 +1,10 @@
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
-#include <string>
-
-#include "utility.hpp"
 #include "moving_object.hpp"
+#include "utility.hpp"
 #include "timer.hpp"
-
+#include <string>
 
 class Player : public MovingObject
 {
@@ -55,10 +53,8 @@ public:
 	const float DOWN_PRESSED_WALL_SLIDING_SPEED = 2.0f;
 
 	// Timers
-	Timer bufferJumpTimer = Timer(0.2);
-	Timer bufferWallJumpTimer = Timer(0.2);
-	Timer coyoteJumpTimer = Timer(0.2);
-	Timer coyoteWallJumpTimer = Timer(0.1);
+	Timer bufferJumpTimer = Timer(0.1);
+	Timer coyoteJumpTimer = Timer(0.1);
 
 	Player(const float x, const float y, const float width, const float height);
 	Player(const raylib::Vector2& position, const raylib::Vector2& size);
@@ -88,7 +84,9 @@ public:
 	float getWallSlidingSpeed();
 
 	void enableWallSlide();
-	
+
+	void enableBufferJumpTimer();
+
 	friend class PlayerStateMachine;
 };
 

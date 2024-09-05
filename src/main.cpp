@@ -19,13 +19,12 @@
 
 #define DEBUG
 
-
 int main()
 {
-	raylib::Window window {800, 600, "Player Movement"};
+	raylib::Window window = raylib::Window(800, 600, "Player Movement");
 	// window.SetTargetFPS(60);
 
-	Player* player = new Player(192.0f * 3.0f, 200.0f, 56.0f, 96.0f);
+	Player* player = new Player(192.0f, 200.0f, 56.0f, 96.0f);
 
 	PlayerStateMachine playerStateMachine = PlayerStateMachine(player);
 
@@ -51,7 +50,7 @@ int main()
 
 
 	SolidObject* ground = new SolidObject(
-		0.0f,
+		192.0f,
 		window.GetSize().y - 64.0f,
 		window.GetSize().x,
 		64.0f
@@ -68,7 +67,7 @@ int main()
 		rightWall->rect.GetPosition().x - (64.0f * 4.0f),
 		0.0f,
 		64.0f,
-		window.GetSize().y - (64.0f * 3.0f)
+		window.GetSize().y - 192.0f
 	);
 
 	while (!window.ShouldClose())

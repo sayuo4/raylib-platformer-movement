@@ -1,8 +1,6 @@
+#include "player_state_machine.hpp"
 #include <iostream>
 #include <functional>
-
-#include "player_state_machine.hpp"
-
 
 PlayerState::PlayerState(std::string name) : name(name) {}
 

@@ -1,11 +1,10 @@
 #ifndef MOVING_OBJECT_HPP
 #define MOVING_OBJECT_HPP
 
-#include "utility.hpp"
 #include "physics_object.hpp"
+#include "utility.hpp"
 #include "raylib-cpp.hpp"
 #include <vector>
-
 
 class MovingObject : public PhysicsObject
 {

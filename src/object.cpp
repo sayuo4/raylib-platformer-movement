@@ -2,7 +2,6 @@
 #include "input_manager.hpp"
 #include "utility.hpp"
 #include "raylib-cpp.hpp"
-
 #include <algorithm>
 
 std::vector<Object*> Object::objects;

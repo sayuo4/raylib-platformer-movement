@@ -1,7 +1,6 @@
 #include "player.hpp"
 #include "input_manager.hpp"
 
-
 Player::Player(float x, float y, float width, float height) :
 	MovingObject(x, y, width, height)
 {}
@@ -61,6 +60,9 @@ void Player::jump(float force, bool changeToJumpState)
 
 	if (changeToJumpState)
 		forceStateTransition.emit("PlayerJumpingState");
+
+	coyoteJumpTimer.stop();
+	bufferJumpTimer.stop();
 }
 
 void Player::enableJump()
@@ -108,4 +110,10 @@ void Player::enableWallSlide()
 {
 	if (canWallSlide())
 		forceStateTransition.emit("PlayerWallSlidingState");
+}
+
+void Player::enableBufferJumpTimer()
+{
+	if (InputManager::isKeyPressed(KEY_Z))
+		bufferJumpTimer.start();
 }

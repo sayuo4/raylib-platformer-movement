@@ -1,6 +1,5 @@
 #include "player_states.hpp"
 
-
 void PlayerIdleState::fixedUpdate(float deltaTime)
 {
 	player->applyGravity(deltaTime);
@@ -38,6 +37,9 @@ PlayerRunningState::PlayerRunningState() : PlayerState("PlayerRunningState") {}
 
 void PlayerLandingState::enter(std::string)
 {
+	if (player->bufferJumpTimer.isRunning())
+		player->jump(player->JUMP_FORCE);
+
 	if (!player->velocity.x)
 	{
 		switchToState("PlayerIdleState");
@@ -54,13 +56,17 @@ void PlayerFallingState::fixedUpdate(float deltaTime)
 {
 	player->applyGravity(deltaTime);
 	player->applyMovement(player->FALLING_ACC, player->FALLING_DEC);
+	player->enableBufferJumpTimer();
 
 	player->move();
 
 	player->enableWallSlide();
 	player->enableWallJump();
 
-	if (player->isOnFloor())
+	if (player->coyoteJumpTimer.isRunning())
+		player->enableJump();
+
+	else if (player->isOnFloor())
 		switchToState("PlayerLandingState");
 	
 	else if (player->velocity.y < 0)
@@ -124,11 +130,15 @@ void PlayerWallJumpingState::fixedUpdate(float deltaTime)
 PlayerWallJumpingState::PlayerWallJumpingState() : PlayerState("PlayerWallJumpingState") {}
 
 
-void PlayerAirborneState::enter(std::string)
+void PlayerAirborneState::enter(std::string previousState)
 {
 	if (player->velocity.y >= 0)
 	{
 		switchToState("PlayerFallingState");
+
+		if (previousState == "PlayerIdleState" || previousState == "PlayerRunningState")
+			player->coyoteJumpTimer.start();
+
 		return;
 	}
 
