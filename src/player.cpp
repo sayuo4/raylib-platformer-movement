@@ -73,7 +73,7 @@ void Player::enableJump()
 
 void Player::wallJump()
 {
-	float wallJumpDir = -wallDir;
+	float wallJumpDir = -getWallDir();
 
 	velocity.x = WALL_JUMP_HORIZONTAL_FORCE * wallJumpDir;
 	jump(WALL_JUMP_VERTICAL_FORCE, false);
@@ -83,7 +83,7 @@ void Player::wallJump()
 
 void Player::enableWallJump()
 {
-	if (InputManager::isKeyPressed(KEY_Z) && isOnWall)
+	if (InputManager::isKeyPressed(KEY_Z) && isOnWall())
 	{
 		wallJump();
 	}
@@ -93,7 +93,7 @@ bool Player::canWallSlide()
 {
 	float inputDir = signum(getHorizontalInput());
 
-	bool isMovingToTheWall = (inputDir == wallDir) && isOnWall;
+	bool isMovingToTheWall = (inputDir == getWallDir()) && isOnWall();
 
 	return isMovingToTheWall && inputDir != 0.0f;
 }

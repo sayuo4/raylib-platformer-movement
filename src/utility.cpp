@@ -34,3 +34,8 @@ CollisionInfo::CollisionInfo(PhysicsObject* collider, raylib::Rectangle intersec
 	to(to),
 	toSignum(signum(to))
 {}
+
+RaycastInfo::RaycastInfo(PhysicsObject* collider, raylib::Vector2 intersectionPoint) :
+	collider(collider),
+	intersectionPoint(intersectionPoint)
+{}

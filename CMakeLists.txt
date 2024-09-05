@@ -10,6 +10,7 @@ set(SOURCES
     src/input_manager.cpp
     src/object.cpp
     src/timer.cpp
+    src/raycast.cpp
     src/physics_object.cpp
     src/moving_object.cpp
     src/solid_object.cpp

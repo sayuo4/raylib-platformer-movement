@@ -1,12 +1,12 @@
 #include "physics_object.hpp"
 
-std::vector<PhysicsObject*> PhysicsObject::bodies;
+std::vector<PhysicsObject*> PhysicsObject::physicsObjects;
 
 PhysicsObject::PhysicsObject(const float x, const float y, const float width, const float height, const bool isVirtual) :
 	rect(x, y, width, height)
 {
 	if (!isVirtual)
-		bodies.push_back(this);
+		physicsObjects.push_back(this);
 }
 
 PhysicsObject::PhysicsObject(const raylib::Vector2& position, const raylib::Vector2& size, const bool isVirtual) :
@@ -30,7 +30,7 @@ CollisionInfo* PhysicsObject::checkCollision(PhysicsObject* other)
 	);
 }
 
-const std::vector<PhysicsObject*>& PhysicsObject::getBodies()
+const std::vector<PhysicsObject*>& PhysicsObject::getPhysicsObjects()
 {
-	return bodies;
+	return physicsObjects;
 }

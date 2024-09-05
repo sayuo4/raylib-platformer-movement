@@ -9,6 +9,7 @@
 #include "input_manager.hpp"
 #include "object.hpp"
 #include "timer.hpp"
+#include "raycast.hpp"
 #include "physics_object.hpp"
 #include "moving_object.hpp"
 #include "solid_object.hpp"
@@ -79,7 +80,7 @@ int main()
 
 #ifdef DEBUG
 		raylib::DrawText("Player State: " + playerStateMachine.getActiveState()->name, 16, 16, 20, BLACK);
-		raylib::DrawText("Player Collision Count: " + std::to_string(player->collisionList.size()), 16, 40, 20, BLACK);
+		raylib::DrawText("Player Collision Count: " + std::to_string(player->getCollisionList().size()), 16, 40, 20, BLACK);
 		raylib::DrawText("FPS: " + std::to_string(GetFPS()), 16, 64, 20, BLACK);
 #endif
 

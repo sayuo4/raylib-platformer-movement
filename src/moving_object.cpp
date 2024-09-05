@@ -15,31 +15,32 @@ MovingObject::MovingObject(const raylib::Vector2& position, const raylib::Vector
 void MovingObject::move()
 {
 	collisionList.clear();
-    isOnFloor = false;
-    isOnCeiling = false;
-    isOnWall = false;
+    onFloor = false;
+    onCeiling = false;
+    onWall = false;
 
     rect.SetPosition(rect.GetPosition() + velocity * FIXED_UPDATE_INTERVAL);
 
-    for (auto& body : getBodies())
+    for (auto& physicsObject : getPhysicsObjects())
     {
-        if (body == this)
+        if (physicsObject == this)
             continue;
 
         // Optimize later
-        CollisionInfo* collisionInfo = checkCollision(body);
+        CollisionInfo* collisionInfo = checkCollision(physicsObject);
+
         if (!collisionInfo)
         {
-            CollisionInfo* wallCollisionInfo = testCollision(raylib::Vector2(1.0f, 0.0f), body);
+            CollisionInfo* wallCollisionInfo = testCollision(raylib::Vector2(1.0f, 0.0f), physicsObject);
             
             if (!wallCollisionInfo)
-                wallCollisionInfo = testCollision(raylib::Vector2(-1.0f, 0.0f), body);
+                wallCollisionInfo = testCollision(raylib::Vector2(-1.0f, 0.0f), physicsObject);
 
             if (wallCollisionInfo)
             {
-                collisionList.push_back(body);
+                collisionList.push_back(physicsObject);
                 
-                isOnWall = true;
+                onWall = true;
                 wallDir = wallCollisionInfo->toSignum.x;
 
                 delete wallCollisionInfo;
@@ -48,13 +49,13 @@ void MovingObject::move()
             continue;
         }
 
-        collisionList.push_back(body);
+        collisionList.push_back(physicsObject);
 
         if (collisionInfo->intersection.width < collisionInfo->intersection.height)
         {
             rect.SetPosition(rect.GetPosition() - raylib::Vector2(collisionInfo->intersection.width * collisionInfo->toSignum.x, 0.0f));
             velocity.x = 0;
-            isOnWall = true;
+            onWall = true;
             wallDir = collisionInfo->toSignum.x;
         }
 
@@ -64,51 +65,76 @@ void MovingObject::move()
             velocity.y = 0;
 
             if (collisionInfo->toSignum.y == 1)
-                isOnFloor = true;
+                onFloor = true;
             else
-                isOnCeiling = true;
+                onCeiling = true;
         }
 
         delete collisionInfo;
     }
 }
 
-CollisionInfo* MovingObject::testCollision(const raylib::Vector2& velocity, PhysicsObject* body)
+CollisionInfo* MovingObject::testCollision(const raylib::Vector2& velocity, PhysicsObject* physicsObject)
 {
-    PhysicsObject* virtualBody = new PhysicsObject(
+    PhysicsObject* virtualphysicsObject = new PhysicsObject(
         rect.GetPosition() + velocity * FIXED_UPDATE_INTERVAL,
         rect.GetSize(),
         true
     );
 
-    CollisionInfo* collisionInfo = virtualBody->checkCollision(body);
+    CollisionInfo* collisionInfo = virtualphysicsObject->checkCollision(physicsObject);
 
-    delete virtualBody;
+    delete virtualphysicsObject;
     return collisionInfo;
 }
 
 CollisionInfo* MovingObject::testMove(const raylib::Vector2& velocity)
 {
-    PhysicsObject* virtualBody = new PhysicsObject(
+    PhysicsObject* virtualphysicsObject = new PhysicsObject(
         rect.GetPosition() + velocity * FIXED_UPDATE_INTERVAL,
         rect.GetSize(),
         true
     );
 
-    for (auto& body : getBodies())
+    for (auto& physicsObject : getPhysicsObjects())
     {
-        if (body == this)
+        if (physicsObject == this)
             continue;
 
-        CollisionInfo* collisionInfo = virtualBody->checkCollision(body);
+        CollisionInfo* collisionInfo = virtualphysicsObject->checkCollision(physicsObject);
 
         if (!collisionInfo)
             continue;
 
-        delete virtualBody;
+        delete virtualphysicsObject;
         return collisionInfo;
     }
 
-    delete virtualBody;
+    delete virtualphysicsObject;
     return nullptr;
+}
+
+const std::vector<PhysicsObject*> MovingObject::getCollisionList()
+{
+    return collisionList;
+}
+
+bool MovingObject::isOnFloor()
+{
+    return onFloor;
+}
+
+bool MovingObject::isOnCeiling()
+{
+    return onCeiling;
+}
+
+bool MovingObject::isOnWall()
+{
+    return onWall;
+}
+
+float MovingObject::getWallDir()
+{
+    return wallDir;
 }

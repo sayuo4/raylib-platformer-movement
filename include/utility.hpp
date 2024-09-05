@@ -70,4 +70,13 @@ public:
 	CollisionInfo(PhysicsObject* collider, raylib::Rectangle intersection, raylib::Vector2 to);
 };
 
+struct RaycastInfo
+{
+public:
+	PhysicsObject* collider;
+	raylib::Vector2 intersectionPoint;
+
+	RaycastInfo(PhysicsObject* collider, raylib::Vector2 intersectionPoint);
+};
+
 #endif

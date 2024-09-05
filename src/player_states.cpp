@@ -10,7 +10,7 @@ void PlayerIdleState::fixedUpdate(float deltaTime)
 	
 	player->enableJump();
 
-	if (!player->isOnFloor) switchToState("PlayerAirborneState");
+	if (!player->isOnFloor()) switchToState("PlayerAirborneState");
 	else if (player->velocity.x) switchToState("PlayerRunningState");
 }
 
@@ -26,7 +26,7 @@ void PlayerRunningState::fixedUpdate(float deltaTime)
 	
 	player->enableJump();
 
-	if (!player->isOnFloor)
+	if (!player->isOnFloor())
 		switchToState("PlayerAirborneState");
 	
 	else if (!player->velocity.x and !player->getHorizontalInput())
@@ -60,7 +60,7 @@ void PlayerFallingState::fixedUpdate(float deltaTime)
 	player->enableWallSlide();
 	player->enableWallJump();
 
-	if (player->isOnFloor)
+	if (player->isOnFloor())
 		switchToState("PlayerLandingState");
 	
 	else if (player->velocity.y < 0)
@@ -80,10 +80,10 @@ void PlayerWallSlidingState::fixedUpdate(float deltaTime)
 
 	float inputDir = signum(player->getHorizontalInput());
 
-	if (inputDir != player->wallDir || !player->isOnWall)
+	if (inputDir != player->getWallDir() || !player->isOnWall())
 		switchToState("PlayerAirborneState");
 
-	else if (player->isOnFloor)
+	else if (player->isOnFloor())
 		switchToState("PlayerLandingState");
 }
 
@@ -110,7 +110,7 @@ void PlayerWallJumpingState::fixedUpdate(float deltaTime)
 {
 	player->applyGravity(deltaTime);
 
-	const float DEC = (player->getHorizontalInput() == player->wallDir) ? player->WALL_JUMPING_TOWARDS_WALL_DEC : player->WALL_JUMPING_DEC;
+	const float DEC = (player->getHorizontalInput() == player->getWallDir()) ? player->WALL_JUMPING_TOWARDS_WALL_DEC : player->WALL_JUMPING_DEC;
 	player->applyMovement(player->WALL_JUMPING_ACC, DEC);
 
 	player->move();

@@ -10,7 +10,7 @@
 class PhysicsObject : public Object
 {
 private:
-    static std::vector<PhysicsObject*> bodies;
+    static std::vector<PhysicsObject*> physicsObjects;
 
 public:
     raylib::Rectangle rect;
@@ -20,7 +20,7 @@ public:
     ~PhysicsObject();
 
     CollisionInfo* checkCollision(PhysicsObject* other);
-    static const std::vector<PhysicsObject*>& getBodies();
+    static const std::vector<PhysicsObject*>& getPhysicsObjects();
 };
 
 #endif
