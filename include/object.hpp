@@ -7,6 +7,8 @@ class Object
 {
 private:
 	static std::vector<Object*> objects;
+	// this is A COMMNET FROM  3qrooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
+	//ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooob.
 	static float accumulatedDeltaTime;
 
 protected:	
