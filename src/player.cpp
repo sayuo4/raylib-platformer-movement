@@ -24,7 +24,7 @@ void Player::applyGravity(float deltaTime)
 float Player::getGravityForce() const
 {
 	return (
-		!InputManager::isKeyDown(KEY_Z) ? getDefaultGravityForce() * JUMP_NOT_PESSED_GRAVITY_FORCE
+		!InputManager::isKeyDown(KEY_Z) ? getDefaultGravityForce() * JUMP_NOT_PRESSED_GRAVITY_FORCE
 		: InputManager::isKeyDown(KEY_DOWN) and velocity.y >= 0.0f ? getDefaultGravityForce() * DOWN_PRESSED_GRAVITY_FORCE
 		: getDefaultGravityForce()
 	);

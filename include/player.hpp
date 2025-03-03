@@ -30,7 +30,7 @@ public:
 	const float WALL_SLIDING_ACC = 50.0f;
 
 	// Gravity
-	const float JUMP_NOT_PESSED_GRAVITY_FORCE = 1.6f;
+	const float JUMP_NOT_PRESSED_GRAVITY_FORCE = 1.6f;
 	const float DOWN_PRESSED_GRAVITY_FORCE = 2.4f;
 	const float GRAVITY_LIMIT = 1000.0f;
 	const float DOWN_PRESSED_GRAVITY_LIMIT = 1.5f;
